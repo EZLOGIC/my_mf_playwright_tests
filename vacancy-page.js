@@ -1,26 +1,24 @@
-const { expect } = require('@playwright/test');
+const { BasePage } = require('./base-page');
+const {VacancyPageLocators} = require('./locators');
 const path = require('path');
 
-exports.VacancyPage = class VacancyPage {
+exports.VacancyPage = class VacancyPage extends BasePage {
 
   /**
    * @param {import('@playwright/test').Page} page
    */
   constructor(page) {
-    this.page = page;
-    this.first_name_field = page.locator('[name="name"]');
-    this.last_name_field = page.locator('[name="surname"]');
-    this.phone_field = page.locator('[name="phone"]');
-    this.email_field = page.locator('[name="email"]');
-    this.cover_letter_field = page.locator('[name="letter"]');
-    this.link_to_cv_field = page.locator('[name="url"]');
-    this.upload_cv = page.locator('[name="file"]');
-    this.applyLink = page.locator('[type="submit"]');
-    this.errormessage = page.locator('[class="error_tqAEs"]');
-  }
-
-  async goto(link) {
-    await this.page.goto(link);
+    super(page);
+    const locators = new VacancyPageLocators();
+    this.first_name_field = page.locator(locators.first_name);
+    this.last_name_field = page.locator(locators.last_name);
+    this.phone_field = page.locator(locators.phone);
+    this.email_field = page.locator(locators.email);
+    this.cover_letter_field = page.locator(locators.cover_letter);
+    this.link_to_cv_field = page.locator(locators.link_to_cv);
+    this.upload_cv = page.locator(locators.upload_cv);
+    this.applyLink = page.locator(locators.apply_link);
+    this.errormessage = page.locator(locators.ui_errormessage);
   }
 
   async fill_first_name(name) {

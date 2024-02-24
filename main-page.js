@@ -1,15 +1,17 @@
-const { expect } = require('@playwright/test');
+const { BasePage } = require('./base-page');
+const {MainPageLocators} = require('./locators');
 
-exports.MainPage = class MainPage {
+exports.MainPage = class MainPage extends BasePage {
 
   /**
    * @param {import('@playwright/test').Page} page
    */
   constructor(page) {
-    this.page = page;
-    this.show_more = page.getByText('Show more openings');
+    super(page);
+    const locators = new MainPageLocators();
+    this.show_more = page.getByText(locators.more_vacancies);
     this.linkslist = [];
-    this.links = page.getByRole('article')
+    this.links = page.getByRole(locators.link);
   }
 
   async goto(link) {
@@ -19,7 +21,10 @@ exports.MainPage = class MainPage {
   async check_show_more() {
     const openings = this.show_more
     if (openings) {
-        await this.show_more.click();
+      const articles_count = await this.links.count();
+      await this.show_more.click();
+      const new_count = articles_count + 1;
+      await this.links.nth(new_count).waitFor('visible');
     };
   }
 
